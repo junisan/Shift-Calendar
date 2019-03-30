@@ -1,0 +1,16 @@
+{
+  "name": "cuando-libra-pablo",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Juan Nicolas",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.3",
+    "sass": "^1.17.3"
+  },
+  "dependencies": {}
+}

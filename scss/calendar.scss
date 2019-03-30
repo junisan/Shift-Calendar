@@ -1,0 +1,114 @@
+$morning: #1DA1F2;
+$afternoon: #f2a91d;
+$night: #f21d28;
+$free: #4ff21d;
+$default:#4e8792;
+
+.calendar {
+  margin: 4rem;
+  padding: 0;
+  list-style: none;
+  font-size: 1.4rem;
+
+  .calendar-day {
+    color: #fff;
+    position: relative;
+    box-sizing: border-box;
+    &:nth-child(7n+1)::before {
+      content: attr(data-week);
+      position: absolute;
+      color: #999;
+    }
+    &::after {
+      content: attr(data-weekday);
+      position: absolute;
+      color: #999;
+    }
+  }
+
+  .morning .content{ background: $morning; }
+  .afternoon .content{ background: $afternoon; }
+  .night .content{ background: $night; }
+  .free .content{ background: $free; }
+  .out:not(.today){
+    .content, .number{ opacity: 0.5; }
+  }
+  .today .content{
+    animation-name: example;
+    animation-duration: 4s;
+    animation-iteration-count: infinite;
+  }
+  .content {
+    background: $default;
+  }
+
+  .number {
+    position: absolute;
+    top: .5rem;
+    left: .5rem;
+    z-index: 100;
+  }
+}
+
+//Mobile
+@media screen and (max-width: 40rem) {
+  .calendar{
+    .calendar-day {
+      margin: 0 0 2px;
+      &:nth-child(7n+1)::before {
+        left: 0;
+        right: 0;
+        bottom: calc(100% + .5rem);
+        display: block;
+        text-align: center;
+        content: 'Semana ' attr(data-week);
+      }
+      &::after {
+        right: calc(100% + .5rem);
+        top: .5rem;
+      }
+    }
+
+    .weekbegin {
+      margin-top: 3rem;
+    }
+    .content {
+      padding: 0 0 20%;
+    }
+  }
+
+}
+
+@media screen and (min-width: 40rem) {
+  .calendar {
+    display: flex;
+    flex-wrap: wrap;
+
+    .calendar-day {
+      flex-basis: calc(14.28571% - 2px);
+      margin: 1px;
+      &:nth-child(7n+1)::before {
+        right: calc(100% + .5rem);
+        top: .5rem;
+      }
+      &::after {
+        display: none;
+      }
+      &:nth-child(-n+7)::after {
+        display: inline;
+        bottom: calc(100% + .2rem);
+        left: .5rem;
+      }
+    }
+    .content {
+      padding-bottom: 100%;
+    }
+  }
+
+}
+
+@keyframes example {
+  0% {transform: rotate(0)}
+  100% {transform: rotate(179deg)}
+
+}

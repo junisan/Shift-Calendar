@@ -27,11 +27,15 @@ const getDateByString = (string)=>{
  * @param {Date} date
  * @return {number}
  */
-const getNumberOfWeek = (date)=>{
-    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-    const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
-    // return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7); <-- Dom as first day of week
-    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay()) / 7);
+const getNumberOfWeek = (d)=>{
+    d = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+// Set to nearest Thursday: current date + 4 - current day number
+// Make Sunday's day number 7
+    d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay()||7));
+// Get first day of year
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1));
+// Calculate full weeks to nearest Thursday
+    return  Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
 };
 
 /**
@@ -63,18 +67,20 @@ const paddingEndingDays = (json) =>{
 /**
  * Removes dates from the array that belong to weeks prior to the current one
  * @param {object} json
+ * @return {object} new Json
  */
 const purgeLastWeekEvent = (json)=>{
     const now = new Date();
     const thisWeek = getNumberOfWeek(now);
-
+    const definitiveJson = [];
     for(let i = 0; i<json.length;i++){
         let dateDay = getDateByString(json[i].day);
         let weekDay = getNumberOfWeek(dateDay);
-        if(thisWeek > weekDay){
-            json.splice(i, 1);
+        if(thisWeek <= weekDay){
+            definitiveJson.push(json[i]);
         }
     }
+    return definitiveJson;
 };
 
 /**
@@ -132,7 +138,7 @@ module.exports.parseDays = ()=>{
         fetchDays()
             .then(response => {
                 let json = response;
-                purgeLastWeekEvent(json);
+                json = purgeLastWeekEvent(json);
                 extraInfo(json);
                 paddingBeginDays(json);
                 paddingEndingDays(json);
